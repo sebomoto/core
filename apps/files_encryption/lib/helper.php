@@ -70,6 +70,10 @@ class Helper {
 		\OCP\Util::connectHook('OC_Filesystem', 'delete', 'OCA\Encryption\Hooks', 'preDelete');
 		\OCP\Util::connectHook('OC_Filesystem', 'post_umount', 'OCA\Encryption\Hooks', 'postUmount');
 		\OCP\Util::connectHook('OC_Filesystem', 'umount', 'OCA\Encryption\Hooks', 'preUmount');
+
+		$factory = \OC::$server->getFilesystemFactory();
+		$factory->listen('\OC\Files','preCopySkeleton', array('OCA\Encryption\Hooks', 'preCopySkeleton'));
+		$factory->listen('\OC\Files', 'postCopySkeleton', array('OCA\Encryption\Hooks', 'postCopySkeleton'));
 	}
 
 	/**
