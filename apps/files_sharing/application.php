@@ -39,7 +39,6 @@ class Application extends App {
 				$c->query('UserSession'),
 				$c->query('ServerContainer')->getAppConfig(),
 				$c->query('ServerContainer')->getConfig(),
-				$c->getCoreApi(),
 				$c->query('URLGenerator'),
 				$c->query('ServerContainer')->getUserManager(),
 				$c->query('ServerContainer')->getLogger()

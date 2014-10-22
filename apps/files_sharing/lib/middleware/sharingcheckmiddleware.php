@@ -10,9 +10,10 @@
 
 namespace OCA\Files_Sharing\Middleware;
 
-use OC\AppConfig;
 use OCP\AppFramework\IApi;
 use \OCP\AppFramework\Middleware;
+use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IAppConfig;
 
 /**
  * Checks whether the "sharing check" is enabled
@@ -21,17 +22,20 @@ use \OCP\AppFramework\Middleware;
  */
 class SharingCheckMiddleware extends Middleware {
 
+	/** @var string */
 	protected $appName;
+	/** @var IAppConfig */
 	protected $appConfig;
+	/** @var IApi */
 	protected $api;
 
 	/***
 	 * @param string $appName
-	 * @param AppConfig $appConfig
+	 * @param IAppConfig $appConfig
 	 * @param IApi $api
 	 */
 	public function __construct($appName,
-								AppConfig $appConfig,
+								IAppConfig $appConfig,
 								IApi $api) {
 		$this->appName = $appName;
 		$this->appConfig = $appConfig;
@@ -40,12 +44,22 @@ class SharingCheckMiddleware extends Middleware {
 
 	/**
 	 * Check if sharing is enabled before the controllers is executed
-	 * FIXME: Show 404 or redirect instead of stopping the application's execution
 	 */
 	public function beforeController($controller, $methodName) {
 		if(!$this->isSharingEnabled()) {
-			exit();
+			throw new \Exception('Sharing is disabled.');
 		}
+	}
+
+	/**
+	 * Return 404 page in case of an exception
+	 * @param \OCP\AppFramework\Controller $controller
+	 * @param string $methodName
+	 * @param \Exception $exception
+	 * @return TemplateResponse
+	 */
+	public function afterException($controller, $methodName, \Exception $exception){
+		return new TemplateResponse('core', '404', array(), 'guest');
 	}
 
 	/**
@@ -53,7 +67,7 @@ class SharingCheckMiddleware extends Middleware {
 	 * @return bool
 	 */
 	private function isSharingEnabled() {
-		// FIXME: This check is currently done here since the route is globally defined and not inside the files_sharing app
+		// FIXME: This check is done here since the route is globally defined and not inside the files_sharing app
 		// Check whether the sharing application is enabled
 		if(!$this->api->isAppEnabled($this->appName)) {
 			return false;

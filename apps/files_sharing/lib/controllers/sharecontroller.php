@@ -44,8 +44,6 @@ class ShareController extends Controller {
 	protected $appConfig;
 	/** @var \OCP\IConfig */
 	protected $config;
-	/** @var \OCP\AppFramework\IApi */
-	protected $api;
 	/** @var \OC\URLGenerator */
 	protected $urlGenerator;
 	/** @var \OC\User\Manager */
@@ -59,7 +57,6 @@ class ShareController extends Controller {
 	 * @param OC\User\Session $userSession
 	 * @param AppConfig $appConfig
 	 * @param OCP\IConfig $config
-	 * @param IApi $api
 	 * @param URLGenerator $urlGenerator
 	 * @param OC\User\Manager $userManager
 	 * @param ILogger $logger
@@ -69,7 +66,6 @@ class ShareController extends Controller {
 								OC\User\Session $userSession,
 								AppConfig $appConfig,
 								OCP\IConfig $config,
-								IApi $api,
 								URLGenerator $urlGenerator,
 								OC\User\Manager $userManager,
 								ILogger $logger) {
@@ -78,7 +74,6 @@ class ShareController extends Controller {
 		$this->userSession = $userSession;
 		$this->appConfig = $appConfig;
 		$this->config = $config;
-		$this->api = $api;
 		$this->urlGenerator = $urlGenerator;
 		$this->userManager = $userManager;
 		$this->logger = $logger;
@@ -227,11 +222,6 @@ class ShareController extends Controller {
 				return new RedirectResponse($this->urlGenerator->linkToRoute('files_sharing.sharecontroller.authenticate',
 					array('token' => $token)));
 			}
-		}
-
-		if (!$this->api->isAppEnabled('files_encryption')) {
-			// encryption app requires the session to store the keys in
-			$this->userSession->getSession()->close();
 		}
 
 		$originalSharePath = self::getPath($token);
