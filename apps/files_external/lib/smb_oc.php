@@ -57,9 +57,9 @@ class SMB_OC extends \OC\Files\Storage\SMB {
 		$mountpoints = \OC_Mount_Config::getAbsoluteMountPoints($params['uid']);
 		$mountpointClasses = array();
 		foreach($mountpoints as $mountpoint) {
-			$mountpointClasses[$mountpoint['class']] = '';
+			$mountpointClasses[$mountpoint['class']] = true;
 		}
-		if(array_key_exists('\OC\Files\Storage\SMB_OC', $mountpointClasses)) {
+		if(isset($mountpointClasses['\OC\Files\Storage\SMB_OC'])) {
 			\OC::$session->set('smb-credentials', \OC::$server->getCrypto()->encrypt(json_encode($params)));
 		}
 	}
