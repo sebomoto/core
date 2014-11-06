@@ -55,12 +55,6 @@ class SharingCheckMiddlewareTest extends \PHPUnit_Framework_TestCase {
 			->with('files_sharing')
 			->will($this->returnValue(false));
 
-		$this->appConfig
-			->expects($this->exactly(0))
-			->method('getValue')
-			->with('core', 'shareapi_allow_links', 'yes')
-			->will($this->returnValue('yes'));
-
 		$this->assertFalse(\Test_Helper::invokePrivate($this->sharingCheckMiddleware, 'isSharingEnabled'));
 	}
 
