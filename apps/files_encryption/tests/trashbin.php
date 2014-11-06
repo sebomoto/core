@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__ . '/util.php';
+require_once __DIR__ . '/testcase.php';
 
 use OCA\Encryption;
 
@@ -28,7 +28,7 @@ use OCA\Encryption;
  * Class Test_Encryption_Trashbin
  * this class provide basic trashbin app tests
  */
-class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
+class Test_Encryption_Trashbin extends Test_Encryption_TestCase {
 
 	const TEST_ENCRYPTION_TRASHBIN_USER1 = "test-trashbin-user1";
 
@@ -45,6 +45,8 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 	public $subsubfolder;
 
 	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+
 		// reset backend
 		\OC_User::clearBackends();
 		\OC_User::useBackend('database');
@@ -63,10 +65,12 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 		\OC_FileProxy::register(new OCA\Encryption\Proxy());
 
 		// create test user
-		\Test_Encryption_Util::loginHelper(\Test_Encryption_Trashbin::TEST_ENCRYPTION_TRASHBIN_USER1, true);
+		self::loginHelper(\Test_Encryption_Trashbin::TEST_ENCRYPTION_TRASHBIN_USER1, true);
 	}
 
-	function setUp() {
+	protected function setUp() {
+		parent::setUp();
+
 		// set user id
 		\OC_User::setUserId(\Test_Encryption_Trashbin::TEST_ENCRYPTION_TRASHBIN_USER1);
 		$this->userId = \Test_Encryption_Trashbin::TEST_ENCRYPTION_TRASHBIN_USER1;
@@ -89,7 +93,7 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 		\OC_App::enable('files_trashbin');
 	}
 
-	function tearDown() {
+	protected function tearDown() {
 		// reset app files_trashbin
 		if ($this->stateFilesTrashbin) {
 			OC_App::enable('files_trashbin');
@@ -97,6 +101,8 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 		else {
 			OC_App::disable('files_trashbin');
 		}
+
+		parent::tearDown();
 	}
 
 	public static function tearDownAfterClass() {
@@ -110,6 +116,8 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 		$view = new \OC\Files\View('/');
 		$view->rmdir('public-keys');
 		$view->rmdir('owncloud_private_key');
+
+		parent::tearDownAfterClass();
 	}
 
 	/**
@@ -119,7 +127,7 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 	function testDeleteFile() {
 
 		// generate filename
-		$filename = 'tmp-' . uniqid() . '.txt';
+		$filename = 'tmp-' . $this->getUniqueID() . '.txt';
 		$filename2 = $filename . '.backup'; // a second file with similar name
 
 		// save file with content
@@ -210,7 +218,7 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 	 */
 	function testRestoreFile() {
 		// generate filename
-		$filename = 'tmp-' . uniqid() . '.txt';
+		$filename = 'tmp-' . $this->getUniqueID() . '.txt';
 		$filename2 = $filename . '.backup'; // a second file with similar name
 
 		// save file with content
@@ -280,7 +288,7 @@ class Test_Encryption_Trashbin extends \PHPUnit_Framework_TestCase {
 	function testPermanentDeleteFile() {
 
 		// generate filename
-		$filename = 'tmp-' . uniqid() . '.txt';
+		$filename = 'tmp-' . $this->getUniqueID() . '.txt';
 
 		// save file with content
 		$cryptedFile = file_put_contents('crypt:///' .$this->userId. '/files/' . $filename, $this->dataShort);
