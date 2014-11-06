@@ -31,7 +31,6 @@ OCP\Util::addScript('user_ldap', 'settings');
 OCP\Util::addScript('core', 'jquery.multiselect');
 OCP\Util::addStyle('user_ldap', 'settings');
 OCP\Util::addStyle('core', 'jquery.multiselect');
-OCP\Util::addStyle('core', 'jquery-ui-1.10.0.custom');
 
 // fill template
 $tmpl = new OCP\Template('user_ldap', 'settings');
