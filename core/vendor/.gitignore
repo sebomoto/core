@@ -60,6 +60,19 @@ select2/**
 !select2/select2-spinner.gif
 !select2/LICENSE
 
+# ui-multiselect
+ui-multiselect/demos
+ui-multiselect/i18n
+!ui-multiselect/src/
+ui-multiselect/src/**
+!ui-multiselect/src/jquery.multiselect.js
+ui-multiselect/tests
+ui-multiselect/CHANGELOG
+ui-multiselect/GPL-LICENSE
+ui-multiselect/jquery.multiselect.filter.css
+ui-multiselect/README.markdown
+ui-multiselect/screenshot.gif
+
 #zxcvbn
 zxcvbn/**
 !zxcvbn/zxcvbn.js
