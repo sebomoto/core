@@ -956,18 +956,16 @@ class OC_Util {
 	 * Ever subsequent (ajax) request must use such a valid token to succeed,
 	 * otherwise the request will be denied as a protection against CSRF.
 	 * @see OC_Util::isCallRegistered()
+	 * @Deprecated Use \OC::$server->getCSRFHelper->getToken() instead
 	 */
 	public static function callRegister() {
-		// Check if a token exists
-		if (!\OC::$server->getSession()->exists('requesttoken')) {
-			// No valid token found, generate a new one.
-			$requestToken = \OC::$server->getSecureRandom()->getMediumStrengthGenerator()->generate(30);
-			\OC::$server->getSession()->set('requesttoken', $requestToken);
-		} else {
-			// Valid token already exists, send it
-			$requestToken = \OC::$server->getSession()->get('requesttoken');
+		$token = \OC::$server->getCSRFHelper()->getToken();
+		if($token === null) {
+			\OC::$server->getCSRFHelper()->register();
+			$token = \OC::$server->getCSRFHelper()->getToken();
 		}
-		return ($requestToken);
+
+		return $token;
 	}
 
 	/**
