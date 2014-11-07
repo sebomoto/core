@@ -205,6 +205,18 @@ class Test_Trashbin extends \PHPUnit_Framework_TestCase {
 		// user2-1.txt should have been expired
 		$this->verifyArray($filesInTrashUser2AfterDelete, array('user2-2.txt', 'user1-4.txt'));
 
+		if (\OC_Util::runningOnWindows()) {
+			/**
+			 * We can not test user1's filesystem anymore, because the StorageMapper
+			 * purges the Mapper table upon destroy(). Since we logged in a second user
+			 * the Mapper does not have the root entry `test-trashbin-user1/files_trashbin`
+			 * anymore. Therefor instead of `files-trashbin` it now tries to use `files_trashbin`
+			 * and therefor fails to strip the path correctly, so the file names are empty,
+			 * which later throws an error when trying to get the file extension.
+			 */
+			$this->markTestIncomplete('[Windows] Can not test user1 filesystem after Mapper::removePath, until it is recursive with owncloud/core#11233');
+		}
+
 		// user1-1.txt and user1-3.txt should have been expired
 		$filesInTrashUser1AfterDelete = OCA\Files_Trashbin\Helper::getTrashFiles('/', self::TEST_TRASHBIN_USER1);
 
