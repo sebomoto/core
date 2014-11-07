@@ -291,4 +291,11 @@ interface IServerContainer {
 	 * @return \OCP\ITempManager
 	 */
 	function getTempManager();
+
+	/**
+	 * Get the IniWrapper
+	 *
+	 * @return \bantu\IniGetWrapper\IniGetWrapper
+	 */
+	 function getIniWrapper();
 }
